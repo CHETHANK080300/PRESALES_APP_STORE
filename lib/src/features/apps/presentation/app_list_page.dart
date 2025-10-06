@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:app_store_frontend/src/models/app_model.dart';
-import 'package:app_store_frontend/src/services/api_service.dart';
+import 'package:presales_app_store/src/models/app_model.dart';
+import 'package:presales_app_store/src/services/api_service.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 final appListProvider = FutureProvider<List<App>>((ref) async {
