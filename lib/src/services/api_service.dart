@@ -1,8 +1,8 @@
 import 'package:dio/dio.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:app_store_frontend/src/models/app_model.dart';
-import 'package:app_store_frontend/src/services/auth_service.dart';
+import 'package:presales_app_store/src/models/app_model.dart';
+import 'package:presales_app_store/src/services/auth_service.dart';
 
 final apiServiceProvider = Provider<ApiService>((ref) {
   final authService = ref.watch(authServiceProvider);

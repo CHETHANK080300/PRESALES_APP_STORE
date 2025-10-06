@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:app_store_frontend/src/features/admin/presentation/upload_form.dart';
-import 'package:app_store_frontend/src/features/apps/presentation/app_list_page.dart';
+import 'package:presales_app_store/src/features/admin/presentation/upload_form.dart';
+import 'package:presales_app_store/src/features/apps/presentation/app_list_page.dart';
 
 class AdminDashboard extends StatelessWidget {
   const AdminDashboard({super.key});

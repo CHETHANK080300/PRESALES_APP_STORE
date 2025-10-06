@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:app_store_frontend/src/services/api_service.dart';
-import 'package:app_store_frontend/src/services/auth_service.dart';
-import 'package:app_store_frontend/src/features/apps/presentation/app_list_page.dart';
+import 'package:presales_app_store/src/services/api_service.dart';
+import 'package:presales_app_store/src/services/auth_service.dart';
+import 'package:presales_app_store/src/features/apps/presentation/app_list_page.dart';
 
 final loginProvider = StateNotifierProvider<LoginNotifier, LoginState>((ref) {
   return LoginNotifier(ref.read(apiServiceProvider), ref.read(authServiceProvider));

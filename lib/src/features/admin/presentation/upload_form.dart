@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:file_picker/file_picker.dart';
-import 'package:app_store_frontend/src/services/api_service.dart';
+import 'package:presales_app_store/src/services/api_service.dart';
 
 final uploadProvider = StateNotifierProvider<UploadNotifier, UploadState>((ref) {
   return UploadNotifier(ref.read(apiServiceProvider));
