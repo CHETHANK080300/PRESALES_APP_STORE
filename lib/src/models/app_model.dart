@@ -28,8 +28,8 @@ class App {
       version: json['version'],
       purpose: json['purpose'],
       platform: (json['platform'] as String).toAppPlatform(),
-      downloadUrl: json['downloadUrl'],
-      plistUrl: json['plistUrl'],
+      downloadUrl: json['download_url'],
+      plistUrl: json['plist_url'],
     );
   }
 }

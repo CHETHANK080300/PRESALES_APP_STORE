@@ -37,7 +37,7 @@ class MyApp extends ConsumerWidget {
     final initialRoute = ref.watch(initialRouteProvider);
 
     return MaterialApp(
-      title: 'Internal App Store',
+      title: 'Appzillon App Store',
       theme: ThemeData(
         primarySwatch: Colors.indigo,
         visualDensity: VisualDensity.adaptivePlatformDensity,
