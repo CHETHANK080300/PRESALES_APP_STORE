@@ -4,14 +4,14 @@ This is the Flutter frontend for the internal "Appzillon App Store". It allows u
 
 ## Features
 
-- **Enhanced Login Screen**: A visually rich login screen with a background image and company logo loaded from the network.
+- **Enhanced Login Screen**: A visually rich login screen with a background image and company logo loaded from local assets. Includes form validation.
 - **User and Admin Authentication**: Login functionality to authenticate users against the backend.
-- **App Listing**: View a list of available apps with their name, version, and purpose.
+- **Dashboard**: A central dashboard page after login that displays a list of available apps and provides a link to the upload page.
+- **Custom App Bar**: The dashboard features a custom app bar with the company logo and a profile icon that opens a menu with a "Sign Out" option.
 - **Platform-Specific Downloads**:
     - Direct download for Android APKs.
     - `itms-services` link for iOS IPA installations.
-- **Admin Dashboard**: A tabbed view for admins to either view the app list or upload new applications.
-- **Multipart File Upload**: An upload form with a progress bar for uploading app files (APK/IPA) and their metadata.
+- **Dedicated Upload Page**: A separate page for uploading new apps, complete with a multi-part form and a progress bar.
 
 ## Tech Stack
 
@@ -33,7 +33,8 @@ lib/
 │   ├── features/
 │   │   ├── auth/ (Login)
 │   │   ├── apps/ (App List)
-│   │   └── admin/ (Admin Dashboard, Upload Form)
+│   │   ├── dashboard/ (Dashboard)
+│   │   └── admin/ (Upload Page & Form)
 │   ├── models/ (Data models, e.g., App)
 │   ├── services/ (API, Authentication)
 │   └── utils/ (Utilities)
@@ -55,14 +56,22 @@ lib/
     flutter pub get
     ```
 
-4.  **Configure the Backend API**:
-    The frontend is configured to connect to a backend API. This is managed via an environment file.
+4.  **Add Local Assets**:
+    The login screen and dashboard require a background image and a logo. You must add these to the project manually.
+    - Create the directory: `assets/images/`
+    - **Background Image**: Download the background image from the URL below and save it as `assets/images/bg-image.jpg`:
+      ```
+      https://digitalbankhitachi.appzillon.com:8502/corporate-admin/appzillon/styles/themes/bankAdmin/img/bg-image.jpg
+      ```
+    - **Logo**: Download the logo from the URL below and save it as `assets/images/nbf-dash-img.svg`:
+      ```
+      https://digitalbankhitachi.appzillon.com:8502/corporate-assisted/apps/styles/themes/CorporateOnboarding/img/nbf-dash-img.svg
+      ```
 
+5.  **Configure the Backend API**:
+    The frontend is configured to connect to a backend API via an environment file.
     - A `.env` file is required in the project root. A `.env.example` file is provided as a template.
-    - The `API_BASE_URL` is pre-configured to point to a Postman mock server:
-      ```
-      API_BASE_URL=https://3fb50b4c-b75e-45ae-8588-482f660d5cb8.mock.pstmn.io/api
-      ```
+    - The `API_BASE_URL` is pre-configured to point to a Postman mock server.
     - The `.env` file is included in `.gitignore` and should not be committed.
 
 ## How to Run
@@ -76,13 +85,3 @@ lib/
   ```bash
   flutter run
   ```
-
-## Connecting to the Spring Boot Backend
-
-This frontend is designed to work with a Java Spring Boot backend that exposes the following endpoints:
-
-- `POST /api/auth/login`
-- `GET /api/apps`
-- `POST /api/apps/upload`
-
-Ensure your backend server is running and accessible at the `API_BASE_URL` you configured in the `.env` file. The `api_service.dart` handles all communication with these endpoints.

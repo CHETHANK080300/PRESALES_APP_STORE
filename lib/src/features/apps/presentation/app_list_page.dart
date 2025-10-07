@@ -16,38 +16,45 @@ class AppListPage extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final appList = ref.watch(appListProvider);
 
-    return Scaffold(
-      appBar: AppBar(title: const Text('Available Apps')),
-      body: appList.when(
-        data: (apps) => ListView.builder(
+    return appList.when(
+      data: (apps) {
+        if (apps.isEmpty) {
+          return const Center(child: Text('No apps available.'));
+        }
+        return ListView.builder(
           itemCount: apps.length,
           itemBuilder: (context, index) {
             final app = apps[index];
-            return ListTile(
-              title: Text(app.name),
-              subtitle: Text('v${app.version} - ${app.purpose}'),
-              trailing: ElevatedButton(
-                onPressed: () => _downloadApp(app),
-                child: const Text('Download'),
+            return Card(
+              margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+              child: ListTile(
+                title: Text(app.name),
+                subtitle: Text('v${app.version} - ${app.purpose}'),
+                trailing: ElevatedButton(
+                  onPressed: () => _downloadApp(app),
+                  child: const Text('Download'),
+                ),
               ),
             );
           },
-        ),
-        loading: () => const Center(child: CircularProgressIndicator()),
-        error: (error, stack) => Center(child: Text('Error: $error')),
-      ),
+        );
+      },
+      loading: () => const Center(child: CircularProgressIndicator()),
+      error: (error, stack) => Center(child: Text('Error: $error')),
     );
   }
 
   void _downloadApp(App app) async {
-    final url = app.platform == AppPlatform.ios
+    final urlString = app.platform == AppPlatform.ios
         ? 'itms-services://?action=download-manifest&url=${app.plistUrl}'
         : app.downloadUrl;
 
-    if (await canLaunchUrl(Uri.parse(url))) {
-      await launchUrl(Uri.parse(url));
+    final uri = Uri.parse(urlString);
+    if (await canLaunchUrl(uri)) {
+      await launchUrl(uri);
     } else {
-      throw 'Could not launch $url';
+      // Consider showing a SnackBar or an alert to the user
+      debugPrint('Could not launch $uri');
     }
   }
 }
