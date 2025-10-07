@@ -2,9 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:presales_app_store/src/features/auth/presentation/login_page.dart';
+import 'package:presales_app_store/src/features/dashboard/presentation/dashboard_page.dart';
 import 'package:presales_app_store/src/services/auth_service.dart';
-import 'package:presales_app_store/src/features/apps/presentation/app_list_page.dart';
-import 'package:presales_app_store/src/features/admin/presentation/admin_dashboard.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -12,59 +11,59 @@ Future<void> main() async {
   runApp(const ProviderScope(child: MyApp()));
 }
 
-final initialRouteProvider = FutureProvider<String>((ref) async {
+final initialPageProvider = FutureProvider<Widget>((ref) async {
   final authService = ref.watch(authServiceProvider);
   final token = await authService.getToken();
-  // In a real app, you'd decode the token to get the role.
-  // For this demo, we'll use a simplified check. A more robust solution
-  // (e.g., decoding a JWT) would be needed for a production app.
   if (token != null) {
-    // This is NOT a secure way to check roles. For demo purposes only.
-    if (token.contains("admin")) {
-        return '/admin';
-    }
-    return '/apps';
+    // In a real app, you would also validate the token here.
+    return const DashboardPage();
   }
-  return '/login';
+  return const LoginPage();
 });
-
 
 class MyApp extends ConsumerWidget {
   const MyApp({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final initialRoute = ref.watch(initialRouteProvider);
+    final initialPage = ref.watch(initialPageProvider);
 
     return MaterialApp(
       title: 'Appzillon App Store',
       theme: ThemeData(
         primarySwatch: Colors.indigo,
         visualDensity: VisualDensity.adaptivePlatformDensity,
+        scaffoldBackgroundColor: Colors.grey[200],
+        appBarTheme: AppBarTheme(
+          backgroundColor: Colors.indigo[600],
+          foregroundColor: Colors.white,
+          elevation: 2,
+        ),
+        elevatedButtonTheme: ElevatedButtonThemeData(
+          style: ElevatedButton.styleFrom(
+            backgroundColor: Colors.indigo[500],
+            foregroundColor: Colors.white,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(8),
+            ),
+          ),
+        ),
       ),
-      home: initialRoute.when(
-        data: (route) => _buildInitialScreen(route),
-        loading: () => const Scaffold(body: Center(child: CircularProgressIndicator())),
-        error: (e, s) => const Scaffold(body: Center(child: Text('Error loading app'))),
+      home: initialPage.when(
+        data: (page) => page,
+        loading: () => const Scaffold(
+          body: Center(child: CircularProgressIndicator()),
+        ),
+        error: (e, s) => const Scaffold(
+          body: Center(child: Text('Error loading application')),
+        ),
       ),
+      // We are using the home property to handle initial routing,
+      // but you could expand this with a full routing solution like go_router.
       routes: {
         '/login': (context) => const LoginPage(),
-        '/apps': (context) => const AppListPage(),
-        '/admin': (context) => const AdminDashboard(),
+        '/dashboard': (context) => const DashboardPage(),
       },
     );
-  }
-
-  Widget _buildInitialScreen(String route) {
-    switch (route) {
-      case '/login':
-        return const LoginPage();
-      case '/apps':
-        return const AppListPage();
-      case '/admin':
-        return const AdminDashboard();
-      default:
-        return const LoginPage();
-    }
   }
 }
