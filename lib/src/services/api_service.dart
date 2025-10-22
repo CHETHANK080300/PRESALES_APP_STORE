@@ -34,11 +34,22 @@ class ApiService {
   }
 
   Future<Map<String, dynamic>> login(String username, String password) async {
-    final response = await _dio.post(
-      '/auth/login',
-      data: {'username': username, 'password': password},
-    );
-    return response.data;
+    try {
+      final response = await _dio.post(
+        '/auth/login',
+        data: {
+          'username': username,
+          'password': password,
+          'deviceInfo': 'curl-client',
+        },
+      );
+      return response.data;
+    } on DioException catch (e) {
+      if (e.response != null) {
+        return e.response!.data;
+      }
+      rethrow;
+    }
   }
 
   Future<List<App>> getApps() async {
