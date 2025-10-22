@@ -31,7 +31,7 @@ class _DashboardPageState extends ConsumerState<DashboardPage> {
       appBar: AppBar(
         automaticallyImplyLeading: false,
         title: SvgPicture.asset(
-          'assets/images/nbf-dash-img.svg',
+          'assets/images/logo.svg',
           height: 32,
           colorFilter: const ColorFilter.mode(Colors.white, BlendMode.srcIn),
         ),

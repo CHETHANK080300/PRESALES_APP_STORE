@@ -78,7 +78,7 @@ class _LoginPageState extends ConsumerState<LoginPage> {
           Container(
             decoration: const BoxDecoration(
               image: DecorationImage(
-                image: AssetImage('assets/images/bg-image.jpg'),
+                image: AssetImage('assets/images/background.jpg'),
                 fit: BoxFit.cover,
               ),
             ),
@@ -104,7 +104,7 @@ class _LoginPageState extends ConsumerState<LoginPage> {
                     crossAxisAlignment: CrossAxisAlignment.stretch,
                     children: [
                       SvgPicture.asset(
-                        'assets/images/nbf-dash-img.svg',
+                        'assets/images/logo.svg',
                         height: 80,
                         placeholderBuilder: (context) => const SizedBox(
                           height: 80,
