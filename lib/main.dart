@@ -29,6 +29,7 @@ class MyApp extends ConsumerWidget {
     final initialPage = ref.watch(initialPageProvider);
 
     return MaterialApp(
+      debugShowCheckedModeBanner: false,
       title: 'Appzillon App Store',
       theme: ThemeData(
         primarySwatch: Colors.indigo,

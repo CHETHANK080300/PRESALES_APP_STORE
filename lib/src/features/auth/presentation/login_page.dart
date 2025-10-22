@@ -19,9 +19,19 @@ class LoginNotifier extends StateNotifier<LoginState> {
     try {
       state = LoginLoading();
       final response = await _apiService.login(username, password);
-      final token = response['token'];
-      await _authService.login(token);
-      state = LoginSuccess();
+
+      if (response['status'] == 'SUCCESS') {
+        final token = response['token'];
+        if (token != null) {
+          await _authService.login(token);
+          state = LoginSuccess();
+        } else {
+          state = LoginFailure('Login failed: Token is null.');
+        }
+      } else {
+        final error = response['error'] ?? 'Unknown login error';
+        state = LoginFailure(error);
+      }
     } catch (e) {
       state = LoginFailure(e.toString());
     }
@@ -92,110 +102,124 @@ class _LoginPageState extends ConsumerState<LoginPage> {
               ),
             ),
           ),
-          Center(
-            child: SingleChildScrollView(
-              padding: const EdgeInsets.all(24.0),
-              child: ConstrainedBox(
-                constraints: const BoxConstraints(maxWidth: 400),
-                child: Form(
-                  key: _formKey,
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.stretch,
-                    children: [
-                      SvgPicture.asset(
-                        'assets/images/logo.svg',
-                        height: 80,
-                        placeholderBuilder: (context) => const SizedBox(
-                          height: 80,
-                          child: Center(child: Text("Logo", style: TextStyle(color: Colors.white, fontSize: 24),))
-                        ),
-                      ),
-                      const SizedBox(height: 16),
-                      const Text(
-                        'Appzillon App Store',
-                        textAlign: TextAlign.center,
-                        style: TextStyle(
-                          fontSize: 28,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.white,
-                        ),
-                      ),
-                      const SizedBox(height: 40),
-                      TextFormField(
-                        controller: _usernameController,
-                        decoration: InputDecoration(
-                          labelText: 'Username',
-                          labelStyle: const TextStyle(color: Colors.white70),
-                          filled: true,
-                          fillColor: Colors.black.withOpacity(0.3),
-                          border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(8.0),
-                            borderSide: BorderSide.none,
-                          ),
-                        ),
-                        style: const TextStyle(color: Colors.white),
-                        validator: (value) {
-                          if (value == null || value.isEmpty) {
-                            return 'Please enter your username';
-                          }
-                          return null;
-                        },
-                      ),
-                      const SizedBox(height: 20),
-                      TextFormField(
-                        controller: _passwordController,
-                        decoration: InputDecoration(
-                          labelText: 'Password',
-                          labelStyle: const TextStyle(color: Colors.white70),
-                          filled: true,
-                          fillColor: Colors.black.withOpacity(0.3),
-                          border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(8.0),
-                            borderSide: BorderSide.none,
-                          ),
-                        ),
-                        obscureText: true,
-                        style: const TextStyle(color: Colors.white),
-                        validator: (value) {
-                          if (value == null || value.isEmpty) {
-                            return 'Please enter your password';
-                          }
-                          return null;
-                        },
-                      ),
-                      const SizedBox(height: 30),
-                      Consumer(
-                        builder: (context, ref, child) {
-                          final loginState = ref.watch(loginProvider);
-                          if (loginState is LoginLoading) {
-                            return const Center(child: CircularProgressIndicator());
-                          }
-                          return ElevatedButton(
-                            style: ElevatedButton.styleFrom(
-                              padding: const EdgeInsets.symmetric(vertical: 16),
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(8.0),
+          Row(
+            children: [
+              const Spacer(flex: 3),
+              Expanded(
+                flex: 2,
+                child: Center(
+                  child: Card(
+                    elevation: 8.0,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(16.0),
+                    ),
+                    child: SingleChildScrollView(
+                      padding: const EdgeInsets.all(24.0),
+                      child: ConstrainedBox(
+                        constraints: const BoxConstraints(maxWidth: 400),
+                        child: Form(
+                          key: _formKey,
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            crossAxisAlignment: CrossAxisAlignment.stretch,
+                            children: [
+                              SvgPicture.asset(
+                                'assets/images/logo.svg',
+                                height: 80,
+                                placeholderBuilder: (context) => const SizedBox(
+                                  height: 80,
+                                  child: Center(child: Text("Logo", style: TextStyle(color: Colors.black, fontSize: 24),))
+                                ),
                               ),
-                            ),
-                            onPressed: () {
-                              if (_formKey.currentState!.validate()) {
-                                ref.read(loginProvider.notifier).login(
-                                      _usernameController.text,
-                                      _passwordController.text,
-                                    );
-                              }
-                            },
-                            child: const Text('Login', style: TextStyle(fontSize: 18)),
-                          );
-                        },
+                              const SizedBox(height: 16),
+                              const Text(
+                                'Appzillon App Store',
+                                textAlign: TextAlign.center,
+                                style: TextStyle(
+                                  fontSize: 28,
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.black,
+                                ),
+                              ),
+                              const SizedBox(height: 40),
+                              TextFormField(
+                                controller: _usernameController,
+                                decoration: InputDecoration(
+                                  labelText: 'Username',
+                                  labelStyle: const TextStyle(color: Colors.black54),
+                                  filled: true,
+                                  fillColor: Colors.grey.shade100,
+                                  border: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(8.0),
+                                    borderSide: BorderSide.none,
+                                  ),
+                                ),
+                                style: const TextStyle(color: Colors.black),
+                                validator: (value) {
+                                  if (value == null || value.isEmpty) {
+                                    return 'Please enter your username';
+                                  }
+                                  return null;
+                                },
+                              ),
+                              const SizedBox(height: 20),
+                              TextFormField(
+                                controller: _passwordController,
+                                decoration: InputDecoration(
+                                  labelText: 'Password',
+                                  labelStyle: const TextStyle(color: Colors.black54),
+                                  filled: true,
+                                  fillColor: Colors.grey.shade100,
+                                  border: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(8.0),
+                                    borderSide: BorderSide.none,
+                                  ),
+                                ),
+                                obscureText: true,
+                                style: const TextStyle(color: Colors.black),
+                                validator: (value) {
+                                  if (value == null || value.isEmpty) {
+                                    return 'Please enter your password';
+                                  }
+                                  return null;
+                                },
+                              ),
+                              const SizedBox(height: 30),
+                              Consumer(
+                                builder: (context, ref, child) {
+                                  final loginState = ref.watch(loginProvider);
+                                  if (loginState is LoginLoading) {
+                                    return const Center(child: CircularProgressIndicator());
+                                  }
+                                  return ElevatedButton(
+                                    style: ElevatedButton.styleFrom(
+                                      padding: const EdgeInsets.symmetric(vertical: 16),
+                                      shape: RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.circular(8.0),
+                                      ),
+                                    ),
+                                    onPressed: () {
+                                      if (_formKey.currentState!.validate()) {
+                                        ref.read(loginProvider.notifier).login(
+                                              _usernameController.text,
+                                              _passwordController.text,
+                                            );
+                                      }
+                                    },
+                                    child: const Text('Login', style: TextStyle(fontSize: 18)),
+                                  );
+                                },
+                              ),
+                            ],
+                          ),
+                        ),
                       ),
-                    ],
+                    ),
                   ),
                 ),
               ),
-            ),
-          ),
+            ],
+          )
         ],
       ),
     );
