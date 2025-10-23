@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:presales_app_store/src/routing/app_router.dart';
+import 'package:internal_app_store/routes/app_router.dart';
 
-Future<void> main() async {
+void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await dotenv.load(fileName: ".env");
   runApp(const ProviderScope(child: MyApp()));
@@ -14,37 +14,23 @@ class MyApp extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final router = ref.watch(routerProvider);
+    final router = ref.watch(appRouterProvider);
 
     return MaterialApp.router(
-      routerConfig: router,
-      title: 'Appzillon App Store',
-      debugShowCheckedModeBanner: false, // As requested
+      title: 'Internal App Store',
       theme: ThemeData(
-        primarySwatch: Colors.indigo,
+        primarySwatch: Colors.blue,
         visualDensity: VisualDensity.adaptivePlatformDensity,
         scaffoldBackgroundColor: Colors.grey[200],
-        appBarTheme: AppBarTheme(
-          backgroundColor: Colors.indigo[600],
-          foregroundColor: Colors.white,
-          elevation: 2,
-        ),
-        elevatedButtonTheme: ElevatedButtonThemeData(
-          style: ElevatedButton.styleFrom(
-            backgroundColor: Colors.indigo[500],
-            foregroundColor: Colors.white,
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(8),
-            ),
-          ),
-        ),
         cardTheme: CardTheme(
           elevation: 2,
           shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(8),
+            borderRadius: BorderRadius.circular(12),
           ),
         ),
       ),
+      debugShowCheckedModeBanner: false,
+      routerConfig: router,
     );
   }
 }
