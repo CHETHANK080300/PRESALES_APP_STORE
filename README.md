@@ -27,7 +27,7 @@ This is the Flutter frontend for an internal application store. It provides a us
 *   [Flutter SDK](https://docs.flutter.dev/get-started/install) (version 3.x or higher)
 *   A running instance of the [Spring Boot backend](<backend_repo_link_here>).
 
-## Getting Started
+## Features
 
 Follow these instructions to get the project up and running on your local machine.
 
