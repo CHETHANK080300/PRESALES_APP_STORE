@@ -60,9 +60,7 @@ class _LoginPageState extends ConsumerState<LoginPage> {
   @override
   Widget build(BuildContext context) {
     ref.listen<LoginState>(loginProvider, (previous, next) {
-      if (next is LoginSuccess) {
-        context.go('/dashboard');
-      } else if (next is LoginFailure) {
+      if (next is LoginFailure) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(content: Text(next.error)),
         );
