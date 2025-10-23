@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:presales_app_store/src/services/api_service.dart';
+import 'package:go_router/go_router.dart';
 
 final uploadProvider = StateNotifierProvider.autoDispose<UploadNotifier, UploadState>((ref) {
   return UploadNotifier(ref.read(apiServiceProvider));
@@ -118,13 +119,8 @@ class _UploadFormState extends ConsumerState<UploadForm> {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(content: Text('Upload successful!')),
         );
-        _formKey.currentState?.reset();
-        setState(() {
-          _filePath = null;
-          _fileName = null;
-        });
-        // Optionally, pop back to dashboard or refresh list
-        // Navigator.of(context).pop();
+        // Go back to the dashboard after successful upload
+        context.pop();
       } else if (next is UploadFailure) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(content: Text('Upload failed: ${next.error}')),

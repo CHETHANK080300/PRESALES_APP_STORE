@@ -34,28 +34,24 @@ class ApiService {
   }
 
   Future<Map<String, dynamic>> login(String username, String password) async {
-    try {
-      final response = await _dio.post(
-        '/auth/login',
-        data: {
-          'username': username,
-          'password': password,
-          'deviceInfo': 'curl-client',
-        },
-      );
-      return response.data;
-    } on DioException catch (e) {
-      if (e.response != null) {
-        return e.response!.data;
-      }
-      rethrow;
-    }
+    final response = await _dio.post(
+      '/auth/login',
+      data: {'username': username, 'password': password},
+    );
+    return response.data;
   }
 
   Future<List<App>> getApps() async {
-    final response = await _dio.get('/apps');
-    final data = response.data as List;
-    return data.map((json) => App.fromJson(json)).toList();
+    try {
+      final response = await _dio.get('/apps');
+      final data = response.data['apps'] as List; // Assuming the key is 'apps'
+      return data.map((json) => App.fromJson(json)).toList();
+    } catch (e) {
+      // Log the error for debugging
+      print('Error fetching apps: $e');
+      // Return an empty list or rethrow a custom exception
+      return [];
+    }
   }
 
   Future<void> uploadApp({

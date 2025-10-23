@@ -31,6 +31,12 @@ class AuthService {
     }
   }
 
+  Future<bool> isAuthenticated() async {
+    final token = await getToken();
+    // In a real app, you'd also validate the token's expiration and signature.
+    return token != null;
+  }
+
   Future<void> _saveToken(String token) async {
     if (kIsWeb) {
       final prefs = await SharedPreferences.getInstance();

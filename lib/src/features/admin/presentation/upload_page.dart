@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:presales_app_store/src/common/widgets/common_app_bar.dart';
 import 'package:presales_app_store/src/features/admin/presentation/upload_form.dart';
 
 class UploadPage extends StatelessWidget {
@@ -6,11 +7,9 @@ class UploadPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Upload New Application'),
-      ),
-      body: const UploadForm(),
+    return const Scaffold(
+      appBar: CommonAppBar(),
+      body: UploadForm(),
     );
   }
 }

@@ -1,87 +1,119 @@
-# Appzillon App Store Frontend
+# Internal App Store - Flutter Frontend
 
-This is the Flutter frontend for the internal "Appzillon App Store". It allows users to browse and download Android (APK) and iOS (IPA) apps. Administrators can upload new apps.
+This is the Flutter frontend for an internal application store. It provides a user-friendly interface for team members to browse, download, and manage internal Android (APK) and iOS (IPA) applications.
 
 ## Features
 
-- **Enhanced Login Screen**: A visually rich login screen with a background image and company logo loaded from local assets. Includes form validation.
-- **User and Admin Authentication**: Login functionality to authenticate users against the backend.
-- **Dashboard**: A central dashboard page after login that displays a list of available apps and provides a link to the upload page.
-- **Custom App Bar**: The dashboard features a custom app bar with the company logo and a profile icon that opens a menu with a "Sign Out" option.
-- **Platform-Specific Downloads**:
-    - Direct download for Android APKs.
-    - `itms-services` link for iOS IPA installations.
-- **Dedicated Upload Page**: A separate page for uploading new apps, complete with a multi-part form and a progress bar.
+*   **Authentication**: Secure login screen for users and admins.
+*   **App Showcase**: A dashboard that displays a list of available apps with detailed information like version, build number, and status.
+*   **Platform-Specific Downloads**:
+    *   Direct APK download for Android.
+    *   Seamless installation for iOS via `itms-services`.
+*   **Admin Capabilities**: A dedicated page for admins to upload new application files (APKs/IPAs) along with their metadata.
+*   **Responsive UI**: A clean, card-based layout that works on web and mobile.
+*   **State Management**: Built with Riverpod for robust and scalable state management.
+*   **Environment Configuration**: Uses a `.env` file to easily configure the backend API endpoint.
 
 ## Tech Stack
 
-- **Framework**: Flutter
-- **State Management**: Riverpod
-- **API Client**: Dio
-- **SVG Rendering**: flutter_svg
-- **Environment**: flutter_dotenv
-- **Secure Storage**: flutter_secure_storage (for mobile)
-- **Web Storage**: shared_preferences (for web)
+*   **Framework**: Flutter
+*   **State Management**: `flutter_riverpod`
+*   **Navigation**: `go_router`
+*   **API Client**: `dio`
+*   **Environment**: `flutter_dotenv`
+
+## Prerequisites
+
+*   [Flutter SDK](https://docs.flutter.dev/get-started/install) (version 3.x or higher)
+*   A running instance of the [Spring Boot backend](<backend_repo_link_here>).
+
+## Features
+
+Follow these instructions to get the project up and running on your local machine.
+
+### 1. Clone the Repository
+
+```sh
+git clone <your-repo-url>
+cd presales_app_store
+```
+
+### 2. Install Dependencies
+
+```sh
+flutter pub get
+```
+
+### 3. Configure Environment Variables
+
+The application loads its API configuration from a `.env` file at the root of the project.
+
+1.  **Create the `.env` file**:
+    ```sh
+    cp .env.example .env
+    ```
+
+2.  **Edit the `.env` file**:
+    Open the newly created `.env` file and set the `API_BASE_URL` to point to your running backend instance.
+
+    ```env
+    # Example:
+    API_BASE_URL=http://localhost:8092/api
+    ```
+
+### 4. Add Local Assets
+
+This project uses a local background image and a logo. You need to create the assets folder and place the files there:
+
+1.  Create the directory: `assets/images`
+2.  Place your background file at: `assets/images/background.jpg`
+3.  Place your logo file at: `assets/images/logo.svg`
+
+The `pubspec.yaml` is already configured to include these assets.
+
+### 5. Run the Application
+
+You can run the application on any supported platform. To run it on the web (Chrome):
+
+```sh
+flutter run -d chrome
+```
+
+## Connecting to the Backend
+
+This Flutter application is designed to work with a specific Spring Boot backend. Ensure that:
+
+1.  The backend server is running.
+2.  The `API_BASE_URL` in your `.env` file correctly points to the backend's address.
+3.  The backend implements the required API endpoints for authentication (`/auth/login`), fetching apps (`/apps`), and uploading files (`/apps/upload`).
 
 ## Project Structure
 
-The project follows a clean architecture, separating concerns into features and layers.
+The project follows a feature-first directory structure to keep the code organized and modular.
 
 ```
 lib/
-├── src/
-│   ├── features/
-│   │   ├── auth/ (Login)
-│   │   ├── apps/ (App List)
-│   │   ├── dashboard/ (Dashboard)
-│   │   └── admin/ (Upload Page & Form)
-│   ├── models/ (Data models, e.g., App)
-│   ├── services/ (API, Authentication)
-│   └── utils/ (Utilities)
-└── main.dart (App entry point)
+├── features/
+│   ├── auth/             # Authentication feature (login)
+│   │   ├── providers/
+│   │   └── ui/
+│   │       └── login_page.dart
+│   ├── dashboard/        # Main dashboard and app list
+│   │   ├── models/
+│   │   ├── providers/
+│   │   └── ui/
+│   │       ├── dashboard_page.dart
+│   │       └── widgets/
+│   │           └── app_card.dart
+│   └── upload/           # App upload feature
+│       └── ui/
+│           └── upload_page.dart
+├── services/             # Core services (API, Auth)
+│   ├── api_service.dart
+│   └── auth_service.dart
+├── routes/               # Navigation and routing
+│   └── app_router.dart
+├── shared/               # Shared widgets and utilities
+│   └── common_app_bar.dart
+└── main.dart             # App entry point
 ```
-
-## Setup and Configuration
-
-1.  **Install Flutter**: Ensure you have the Flutter SDK installed. Follow the [official documentation](https://flutter.dev/docs/get-started/install) for instructions.
-
-2.  **Clone the repository**:
-    ```bash
-    git clone <repository-url>
-    cd presales_app_store
-    ```
-
-3.  **Install dependencies**:
-    ```bash
-    flutter pub get
-    ```
-
-4.  **Add Local Assets**:
-    The login screen and dashboard require a background image and a logo. You must add these to the project manually.
-    - Create the directory: `assets/images/`
-    - **Background Image**: Download the background image from the URL below and save it as `assets/images/bg-image.jpg`:
-      ```
-      https://digitalbankhitachi.appzillon.com:8502/corporate-admin/appzillon/styles/themes/bankAdmin/img/bg-image.jpg
-      ```
-    - **Logo**: Download the logo from the URL below and save it as `assets/images/nbf-dash-img.svg`:
-      ```
-      https://digitalbankhitachi.appzillon.com:8502/corporate-assisted/apps/styles/themes/CorporateOnboarding/img/nbf-dash-img.svg
-      ```
-
-5.  **Configure the Backend API**:
-    The frontend is configured to connect to a backend API via an environment file.
-    - A `.env` file is required in the project root. A `.env.example` file is provided as a template.
-    - The `API_BASE_URL` is pre-configured to point to a Postman mock server.
-    - The `.env` file is included in `.gitignore` and should not be committed.
-
-## How to Run
-
-- **Web**:
-  ```bash
-  flutter run -d chrome
-  ```
-- **Mobile (Android/iOS)**:
-  Make sure you have a device connected or an emulator/simulator running.
-  ```bash
-  flutter run
-  ```
